@@ -7,14 +7,13 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:application",
+      "executor": "@nx/angular:webpack-browser",
       "outputs": [
         "{options.outputPath}"
       ],
       "options": {
         "outputPath": "dist/solana-bootcamp-intro",
         "index": "./src/index.html",
-        "browser": "./src/main.ts",
         "polyfills": [
           "zone.js",
           "./src/polyfills.ts"
@@ -29,7 +28,12 @@
           "@angular/material/prebuilt-themes/deeppurple-amber.css",
           "./src/styles.scss"
         ],
-        "scripts": []
+        "scripts": [],
+        "main": "./src/main.ts",
+        "customWebpackConfig": {
+          "path": "webpack.config.js"
+        },
+        "commonChunk": false
       },
       "configurations": {
         "production": {
@@ -45,7 +49,10 @@
               "maximumError": "4kb"
             }
           ],
-          "outputHashing": "all"
+          "outputHashing": "all",
+          "customWebpackConfig": {
+            "path": "webpack.prod.config.js"
+          }
         },
         "development": {
           "optimization": false,
@@ -56,7 +63,7 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "executor": "@nx/angular:dev-server",
       "configurations": {
         "production": {
           "buildTarget": "solana-bootcamp-intro:build:production"
@@ -65,12 +72,17 @@
           "buildTarget": "solana-bootcamp-intro:build:development"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4200,
+        "publicHost": "http://localhost:4200"
+      }
     },
     "extract-i18n": {
-      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "executor": "ngx-build-plus:extract-i18n",
       "options": {
-        "buildTarget": "solana-bootcamp-intro:build"
+        "buildTarget": "solana-bootcamp-intro:build",
+        "extraWebpackConfig": "webpack.config.js"
       }
     }
   }
