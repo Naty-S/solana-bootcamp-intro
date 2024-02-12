@@ -1,13 +1,19 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NxWelcomeComponent } from './nx-welcome.component';
+import { HdWalletMultiButtonComponent } from '@heavy-duty/wallet-adapter-material';
 
 @Component({
   standalone: true,
-  imports: [NxWelcomeComponent, RouterModule],
+  imports: [RouterModule, HdWalletMultiButtonComponent],
   selector: 'solana-bootcamp-intro-root',
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  template: `
+    <header class="px-16 pt-24 pb-8">
+      <h1 class="text-center text-5xl mb-4">App component Header</h1>
+      <div class="flex justify-center">
+        <hd-wallet-multi-button/>
+      </div>
+    </header>
+  `
 })
 export class AppComponent {
   title = 'solana-bootcamp-intro';
