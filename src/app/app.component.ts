@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, RouterLink, RouterOutlet } from '@angular/router';
 import { HdWalletMultiButtonComponent } from '@heavy-duty/wallet-adapter-material';
 import { ShyftApiService } from './shyft-api.service';
 import { WalletStore } from '@heavy-duty/wallet-adapter';
@@ -17,6 +17,17 @@ import { computedAsync } from 'ngxtension/computed-async';
         <hd-wallet-multi-button/>
       </div>
 
+      <nav>
+        <ul class="flex justify-center gap-4">
+          <li>
+            <a [routerLink]="['']" mat-raised-button>Home</a>
+          </li>
+          <li>
+            <a [routerLink]="['settings']" mat-raised-button>Settings</a>
+          </li>
+        </ul>
+      </nav>
+
       @if (account()) {
         <div class="absolute top-4 left-4 flex items-center gap-2">
           <img [src]="account()?.info?.image" class="w-8 h-8" />
@@ -24,8 +35,14 @@ import { computedAsync } from 'ngxtension/computed-async';
             {{ account()?.balance }}
           </p>
         </div>
+
+        Display transactions
       }
     </header>
+
+    <main>
+      <router-outlet />
+    </main>
   `
 })
 export class AppComponent {
