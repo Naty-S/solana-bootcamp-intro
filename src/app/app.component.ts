@@ -1,9 +1,14 @@
-import { Component, inject, signal } from '@angular/core';
-import { DecimalPipe } from '@angular/common';
+import { Component, inject, signal, ViewChild } from '@angular/core';
+import { DecimalPipe, DatePipe } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { toSignal } from "@angular/core/rxjs-interop";
+
 import { MatAnchor, MatButtonModule } from '@angular/material/button';
-import { MatListModule } from '@angular/material/list';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { HdWalletMultiButtonComponent } from '@heavy-duty/wallet-adapter-material';
 import { WalletStore } from '@heavy-duty/wallet-adapter';
@@ -13,56 +18,27 @@ import { computedAsync } from 'ngxtension/computed-async';
 import { ShyftApiService } from './shyft-api.service';
 import { HomeComponent } from './home.component';
 
+
 @Component({
   standalone: true,
   imports: [
       RouterLink
     , RouterOutlet
+    , HdWalletMultiButtonComponent
     , DecimalPipe
+    , DatePipe
     , MatAnchor
     , MatButtonModule
-    , MatListModule
-    , HdWalletMultiButtonComponent
+    , MatTableModule
+    , MatSortModule
+    , MatPaginatorModule
+    , MatFormFieldModule
+    , MatInputModule
     , HomeComponent
   ],
   selector: 'solana-bootcamp-intro-root',
-  template: `
-    <header class="px-16 pt-24 pb-8">
-      
-      <h1 class="text-center text-5xl mb-4">Solana Acoount</h1>
-
-      <div class="flex justify-center">
-        <hd-wallet-multi-button/>
-      </div>
-
-      <nav>
-        <ul class="flex justify-center gap-4">
-          <li>
-            <a [routerLink]="['']" mat-raised-button>Home</a>
-          </li>
-          <li>
-            <a [routerLink]="['settings']" mat-raised-button>Settings</a>
-          </li>
-        </ul>
-      </nav>
-    </header>
-
-    <main>
-      <router-outlet (activate)="onActive($event)" />
-
-      @if (account()) {
-        <div class="absolute left-1/2 transform-translate-x-1/2 top-4 flex items-center gap-2">
-          <img [src]="account()?.info?.image" class="w-10 h-10" />
-          <p class="text-3xl font-bold">
-            {{ account()?.balance }}
-          </p>
-        </div>
-      }
-
-      <!-- If not using router-outlet -->
-      <!-- <solana-bootcamp-intro-home (coin)="onCoinSelected($event)" /> -->
-    </main>
-  `
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
 
@@ -70,6 +46,35 @@ export class AppComponent {
   private readonly _walletStore = inject(WalletStore);
   private readonly _publicKey = toSignal(this._walletStore.publicKey$);
   private _coin = signal('');
+  currentPage = 0;
+  displayedColumns: string[] = ['Signature', 'Time', 'Instructions', 'By', 'From', 'To', 'Amount', 'Fee (SOL)'];
+
+  @ViewChild(MatTableDataSource) dataSource!: MatTableDataSource<any>;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  // If not using router-outlet
+  // onCoinSelected(coin: any) { console.log(coin) ; this._coin = coin; };
+  
+  readonly account = computedAsync(
+    () => this._shyftApiService.getAccount(this._publicKey()?.toBase58(), this._coin().toString()),
+    { requireSync: true }
+  );
+
+  readonly txs = computedAsync(
+    () => {
+      const tx = this._shyftApiService.getTransactions(this._publicKey()?.toBase58(), this._coin().toString());
+      
+      tx.subscribe((data) => {
+        this.dataSource = new MatTableDataSource(data);
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      });
+      
+      return tx;
+    },
+    { requireSync: true }
+  );
 
   onActive(component: HomeComponent) {
 
@@ -78,13 +83,19 @@ export class AppComponent {
         this._coin.set(newCoin);
       });
     }
-  }
+  };
 
-  // If not using router-outlet
-  // onCoinSelected(coin: any) { console.log(coin) ; this._coin = coin; };
+  applyFilter(event: Event) {
+    
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim();
 
-  readonly account = computedAsync(
-    () => this._shyftApiService.getAccount(this._publicKey()?.toBase58(), this._coin().toString()),
-    { requireSync: true }
-  );
-}
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  };
+
+  handlePageEvent(pageEvent: PageEvent) {
+    this.currentPage = pageEvent.pageIndex;
+  };
+};
