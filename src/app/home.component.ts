@@ -3,6 +3,7 @@ import { MatAnchor, MatButtonModule } from '@angular/material/button';
 
 
 @Component({
+  standalone: true,
   selector: 'solana-bootcamp-intro-home',
   imports: [
       MatAnchor
@@ -22,8 +23,7 @@ import { MatAnchor, MatButtonModule } from '@angular/material/button';
         </li>
       </ul>
     </section>
-  `,
-  standalone: true
+  `
 })
 export class HomeComponent {
   

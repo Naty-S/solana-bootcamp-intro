@@ -46,6 +46,7 @@ export class AppComponent {
   private readonly _walletStore = inject(WalletStore);
   private readonly _publicKey = toSignal(this._walletStore.publicKey$);
   private _coin = signal('');
+  
   currentPage = 0;
   displayedColumns: string[] = ['Signature', 'Time', 'Instructions', 'By', 'From', 'To', 'Amount', 'Fee (SOL)'];
 

@@ -3,6 +3,9 @@ import { Injectable, inject } from '@angular/core';
 
 import { map, of } from 'rxjs';
 
+import { TransactionsHistory } from '../models/transactions.model';
+
+
 @Injectable({ providedIn: "root" })
 export class ShyftApiService {
 
@@ -37,8 +40,7 @@ export class ShyftApiService {
     url.searchParams.append("account", publicKey)
     // url.searchParams.append("token", coin.includes("USD") ? this._mintUSDC : this._mintSILLY);
 
-    return this._httpClietnt.get<{ result: Array<any> }>
-      (url.toString(), { headers: this._header })
+    return this._httpClietnt.get<TransactionsHistory>(url.toString(), { headers: this._header })
       .pipe(map((response) => response.result ));
   };
 };
