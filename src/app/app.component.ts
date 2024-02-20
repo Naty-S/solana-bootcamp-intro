@@ -15,7 +15,7 @@ import { WalletStore } from '@heavy-duty/wallet-adapter';
 
 import { computedAsync } from 'ngxtension/computed-async';
 
-import { ShyftApiService } from './shyft-api.service';
+import { ShyftApiService } from './core/services/shyft-api.service';
 import { HomeComponent } from './home.component';
 
 
