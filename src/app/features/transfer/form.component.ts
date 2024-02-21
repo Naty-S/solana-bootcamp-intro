@@ -99,8 +99,10 @@ export interface TransferFormPayload {
         }
       </mat-form-field>
 
-      <footer>
-        <button type="submit">Enviar</button>
+      <footer class="flex justify-center">
+        <button type="submit" mat-raised-button color="primary">
+          Enviar
+        </button>
       </footer>
     </form>
   `
