@@ -4,6 +4,7 @@ boton transferir
 import { Component, OnInit, inject } from '@angular/core';
 
 import { MatDialog } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 import { TransferModalComponent } from './modal.component';
 
@@ -11,10 +12,12 @@ import { TransferModalComponent } from './modal.component';
 @Component({
   standalone: true,
   selector: 'solana-bootcamp-intro-transfer-section',
-  imports: [],
+  imports: [MatButtonModule],
   template: `
-    <section>
-      <button (click)="onTransfer()">Transfer</button>
+    <section class="flex justify-center items-center gap-2">
+      <button type="button" (click)="onTransfer()" mat-raised-button color="primary">
+        transferir
+      </button>
     </section>
   `
 })
