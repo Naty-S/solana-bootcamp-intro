@@ -21,6 +21,8 @@
 <main>
   <router-outlet (activate)="onActive($event)" />
 
+  <button (click)="onTransfer()">Transfer</button>
+
   @if (account()) {
     <div class="absolute left-1/2 transform-translate-x-1/2 top-4 flex items-center gap-2">
       <img [src]="account()?.info?.image" class="w-10 h-10" />

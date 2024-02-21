@@ -9,6 +9,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatDialog } from '@angular/material/dialog';
 
 import { HdWalletMultiButtonComponent } from '@heavy-duty/wallet-adapter-material';
 import { WalletStore } from '@heavy-duty/wallet-adapter';
@@ -17,6 +18,7 @@ import { computedAsync } from 'ngxtension/computed-async';
 
 import { ShyftApiService } from './core/services/shyft-api.service';
 import { HomeComponent } from './home.component';
+import { TransferModalComponent } from './features/transfer/modal.component';
 
 
 @Component({
@@ -44,6 +46,7 @@ export class AppComponent {
 
   private readonly _shyftApiService = inject(ShyftApiService);
   private readonly _walletStore = inject(WalletStore);
+  private readonly _matDialog = inject(MatDialog);
   private readonly _publicKey = toSignal(this._walletStore.publicKey$);
   private _coin = signal('');
   
@@ -98,5 +101,9 @@ export class AppComponent {
 
   handlePageEvent(pageEvent: PageEvent) {
     this.currentPage = pageEvent.pageIndex;
+  };
+
+  onTransfer() {
+    this._matDialog.open(TransferModalComponent)
   };
 };
