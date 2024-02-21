@@ -1,0 +1,104 @@
+<section>
+  <!-- 
+  
+    // boton para mostrar o no las transacciones
+    // radio button para mostrar diferentes tipos
+   -->
+  <h2 class="text-center text-3xl mb-4">Historial de Transacciones</h2>
+  
+  <mat-card class="w-75 px-4 py-8">
+  
+    @if (!txs()) {
+    
+      <p class="text-center">
+        Conecta tu wallet para ver las transacciones.
+      </p>
+    
+    } @else if (txs()?.length === 0) {
+      
+      <p class="text-center">
+        No hay transacciones disponibles.
+      </p>
+    
+    } @else {
+  
+      <mat-form-field>
+        <mat-label>Filter</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="56gjT..." #input>
+      </mat-form-field>
+  
+      <div class="mat-elevation-z8">
+        
+        <mat-table mat-table [dataSource]="transactions" class="" matSort>
+          <!-- Signature Column -->
+          <ng-container matColumnDef="Signature">
+            <mat-header-cell *matHeaderCellDef mat-sort-header>Signature</mat-header-cell>
+            <mat-cell *matCellDef="let tx">{{tx.signatures[0]}}</mat-cell>
+          </ng-container>
+  
+          <!-- Time Column -->
+          <ng-container matColumnDef="Time">
+            <mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Time</mat-header-cell>
+            <mat-cell *matCellDef="let tx">{{tx.timestamp}}</mat-cell>
+          </ng-container>
+  
+          <!-- Instructions Column -->
+          <ng-container matColumnDef="Instructions">
+            <mat-header-cell *matHeaderCellDef>Instructions</mat-header-cell>
+            <mat-cell *matCellDef="let tx">{{tx.type}}</mat-cell>
+          </ng-container>
+  
+          <!-- By Column -->
+          <ng-container matColumnDef="By">
+            <mat-header-cell *matHeaderCellDef>By</mat-header-cell>
+            <mat-cell *matCellDef="let tx">{{tx.fee_payer}}</mat-cell>
+          </ng-container>
+  
+          <!-- From Column -->
+          <ng-container matColumnDef="From">
+            <mat-header-cell *matHeaderCellDef>From</mat-header-cell>
+            <mat-cell *matCellDef="let tx">{{tx.actions[0].info.sender}}</mat-cell>
+          </ng-container>
+  
+          <!-- To Column -->
+          <ng-container matColumnDef="To">
+            <mat-header-cell *matHeaderCellDef>To</mat-header-cell>
+            <mat-cell *matCellDef="let tx">{{tx.actions[0].info.receiver}}</mat-cell>
+          </ng-container>
+  
+          <!-- Amount Column -->
+          <ng-container matColumnDef="Amount">
+            <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
+            <mat-cell *matCellDef="let tx">{{tx.actions[0].info.amount | number}}</mat-cell>
+          </ng-container>
+  
+          <!-- Fee (SOL) Column -->
+          <ng-container matColumnDef="Fee (SOL)">
+            <mat-header-cell *matHeaderCellDef>Fee (SOL)</mat-header-cell>
+            <mat-cell *matCellDef="let tx">{{tx.fee}}</mat-cell>
+          </ng-container>
+  
+          <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"/>
+          <mat-row *matRowDef="let tx; columns: displayedColumns;" />
+  
+          <!-- Row shown when there is no matching data. -->
+          <!-- <mat-row *matNoDataRow>
+            <mat-cell colspan="4">
+              No data matching the filter "{{input.value}}"
+            </mat-cell>
+          </mat-row> -->
+        </mat-table>
+  
+        <mat-paginator
+          showFirstLastButtons
+          [length]="txs()?.length"
+          [pageSize]="5"
+          [pageSizeOptions]="[5, 10, 25, 100]"
+          [pageIndex]="currentPage"
+          (page)="handlePageEvent($event)"
+          aria-label="Transactions"
+        />
+      </div>
+    }
+  </mat-card>
+</section>

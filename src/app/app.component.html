@@ -1,6 +1,6 @@
 <header class="px-16 pt-24 pb-8">
 
-  <h1 class="text-center text-5xl mb-4">Solana Acoount</h1>
+  <h1 class="text-center text-5xl mb-4">Solana Account</h1>
 
   <div class="flex justify-center">
     <hd-wallet-multi-button />
@@ -19,99 +19,7 @@
 </header>
 
 <main>
-  <router-outlet (activate)="onActive($event)" />
-
-  <button (click)="onTransfer()">Transfer</button>
-
-  @if (account()) {
-    <div class="absolute left-1/2 transform-translate-x-1/2 top-4 flex items-center gap-2">
-      <img [src]="account()?.info?.image" class="w-10 h-10" />
-      <p class="text-3xl font-bold">
-        {{ account()?.balance | number }}
-      </p>
-    </div>
-  }
-
-  @if (txs()) {
-    <mat-form-field>
-      <mat-label>Filter</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="56gjT..." #input>
-    </mat-form-field>
-
-    <div class="mat-elevation-z8">
-      
-      <mat-table mat-table [dataSource]="dataSource" class="" matSort>
-        <!-- Signature Column -->
-        <ng-container matColumnDef="Signature">
-          <mat-header-cell *matHeaderCellDef mat-sort-header>Signature</mat-header-cell>
-          <mat-cell *matCellDef="let tx">{{tx.signatures[0]}}</mat-cell>
-        </ng-container>
-
-        <!-- Time Column -->
-        <ng-container matColumnDef="Time">
-          <mat-header-cell *matHeaderCellDef mat-sort-header disableClear>Time</mat-header-cell>
-          <mat-cell *matCellDef="let tx">{{tx.timestamp}}</mat-cell>
-        </ng-container>
-
-        <!-- Instructions Column -->
-        <ng-container matColumnDef="Instructions">
-          <mat-header-cell *matHeaderCellDef>Instructions</mat-header-cell>
-          <mat-cell *matCellDef="let tx">{{tx.type}}</mat-cell>
-        </ng-container>
-
-        <!-- By Column -->
-        <ng-container matColumnDef="By">
-          <mat-header-cell *matHeaderCellDef>By</mat-header-cell>
-          <mat-cell *matCellDef="let tx">{{tx.fee_payer}}</mat-cell>
-        </ng-container>
-
-        <!-- From Column -->
-        <ng-container matColumnDef="From">
-          <mat-header-cell *matHeaderCellDef>From</mat-header-cell>
-          <mat-cell *matCellDef="let tx">{{tx.actions[0].info.sender}}</mat-cell>
-        </ng-container>
-
-        <!-- To Column -->
-        <ng-container matColumnDef="To">
-          <mat-header-cell *matHeaderCellDef>To</mat-header-cell>
-          <mat-cell *matCellDef="let tx">{{tx.actions[0].info.receiver}}</mat-cell>
-        </ng-container>
-
-        <!-- Amount Column -->
-        <ng-container matColumnDef="Amount">
-          <mat-header-cell *matHeaderCellDef>Amount</mat-header-cell>
-          <mat-cell *matCellDef="let tx">{{tx.actions[0].info.amount | number}}</mat-cell>
-        </ng-container>
-
-        <!-- Fee (SOL) Column -->
-        <ng-container matColumnDef="Fee (SOL)">
-          <mat-header-cell *matHeaderCellDef>Fee (SOL)</mat-header-cell>
-          <mat-cell *matCellDef="let tx">{{tx.fee}}</mat-cell>
-        </ng-container>
-
-        <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"/>
-        <mat-row *matRowDef="let tx; columns: displayedColumns;" />
-
-        <!-- Row shown when there is no matching data. -->
-        <!-- <mat-row *matNoDataRow>
-          <mat-cell colspan="4">
-            No data matching the filter "{{input.value}}"
-          </mat-cell>
-        </mat-row> -->
-      </mat-table>
-
-      <mat-paginator
-        showFirstLastButtons
-        [length]="txs().length"
-        [pageSize]="5"
-        [pageSizeOptions]="[5, 10, 25, 100]"
-        [pageIndex]="currentPage"
-        (page)="handlePageEvent($event)"
-        aria-label="Transactions"
-      />
-    </div>
-
-  }
+  <router-outlet />
 
   <!-- If not using router-outlet -->
   <!-- <solana-bootcamp-intro-home (coin)="onCoinSelected($event)" /> -->
