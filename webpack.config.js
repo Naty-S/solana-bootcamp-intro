@@ -19,6 +19,10 @@ module.exports = {
   resolve: {
     alias: {
       ...sharedMappings.getAliases(),
+    },
+    fallback: {
+      crypto: require.resolve("crypto-browserify"),
+      stream: require.resolve("stream-browserify"),
     }
   },
   experiments: {
