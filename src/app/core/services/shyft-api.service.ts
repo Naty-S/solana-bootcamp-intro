@@ -10,7 +10,8 @@ import { TransactionsHistory } from '../models/transactions.model';
 export class ShyftApiService {
 
   private readonly _httpClietnt: HttpClient = inject(HttpClient);
-  private readonly _header = { "x-api-key": "7c89JUFN8-tljDsA" };
+  private readonly _key = "7c89JUFN8-tljDsA";
+  private readonly _header = { "x-api-key": this._key };
   private readonly _mintUSDC = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v";
   private readonly _mintSILLY = "7EYnhQoR9YM3N7UoaKRoA44Uy8JeaZV3qyouov87awMs"; // dir del contrato
 
@@ -42,5 +43,13 @@ export class ShyftApiService {
 
     return this._httpClietnt.get<TransactionsHistory>(url.toString(), { headers: this._header })
       .pipe(map((response) => response.result ));
+  };
+
+  getEndpoint() {
+    const url = new URL("https://rpc.shyft.to");
+    
+    url.searchParams.set("api_key", this._key);
+    
+    return url.toString();
   };
 };

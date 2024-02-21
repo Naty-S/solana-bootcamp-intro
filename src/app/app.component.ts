@@ -1,4 +1,4 @@
-import { Component, inject, signal, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { DecimalPipe, DatePipe } from '@angular/common';
 import { RouterLink, RouterOutlet } from '@angular/router';
 import { toSignal } from "@angular/core/rxjs-interop";
@@ -12,7 +12,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialog } from '@angular/material/dialog';
 
 import { HdWalletMultiButtonComponent } from '@heavy-duty/wallet-adapter-material';
-import { WalletStore } from '@heavy-duty/wallet-adapter';
+import { ConnectionStore, WalletStore } from '@heavy-duty/wallet-adapter';
 
 import { computedAsync } from 'ngxtension/computed-async';
 
@@ -42,10 +42,11 @@ import { TransferModalComponent } from './features/transfer/modal.component';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
   private readonly _shyftApiService = inject(ShyftApiService);
   private readonly _walletStore = inject(WalletStore);
+  private readonly _connectionStore = inject(ConnectionStore);
   private readonly _matDialog = inject(MatDialog);
   private readonly _publicKey = toSignal(this._walletStore.publicKey$);
   private _coin = signal('');
@@ -79,6 +80,10 @@ export class AppComponent {
     },
     { requireSync: true }
   );
+
+  ngOnInit() {
+    this._connectionStore.setEndpoint(this._shyftApiService.getEndpoint());
+  }
 
   onActive(component: HomeComponent) {
 
