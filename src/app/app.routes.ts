@@ -1,13 +1,14 @@
 import { Route } from '@angular/router';
 
+
 export const appRoutes: Route[] = [
   {
     path: '',
-    loadComponent: () => import("./home.component").then((m) => m.HomeComponent)
+    loadComponent: () => import("./pages/home.component").then((m) => m.HomeComponent)
   },
   {
     path: 'settings',
-    loadComponent: () => import("./settings.component").then((m) => m.SettingsComponent)
+    loadComponent: () => import("./pages/settings.component").then((m) => m.SettingsComponent)
   },
   {
     path: '*',
