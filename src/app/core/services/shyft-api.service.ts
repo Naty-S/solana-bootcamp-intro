@@ -3,7 +3,7 @@ import { Injectable, inject } from '@angular/core';
 
 import { map, of } from 'rxjs';
 
-import { TransactionsHistory } from '../models/transactions.model';
+import { TokenBalance, Portfolio, TransactionsHistory, TokensBalance } from '../models/transactions.model';
 
 
 @Injectable({ providedIn: "root" })
@@ -30,7 +30,7 @@ export class ShyftApiService {
   }
 
   /*  */
-  getTokenBalance(publicKey: string | undefined | null, coin: string) {
+  getTokenBalance(publicKey: string | undefined | null, mint: string) {
 
     if (!publicKey) return of(null);
 
@@ -38,15 +38,57 @@ export class ShyftApiService {
 
     url.searchParams.append("network", "mainnet-beta")
     url.searchParams.append("wallet", publicKey)
-    url.searchParams.append("token", coin.includes("USD") ? this._mintUSDC : this._mintSILLY);
+    url.searchParams.append("token", mint);
 
-    return this._httpClient.get<{ result: { balance: number; info: { image: string } } }>
-      (url.toString(), { headers: this._header })
+    return this._httpClient.get<TokenBalance>(url.toString(), { headers: this._header })
       .pipe(map((response) => response.result));
   };
 
   /*  */
-  getTransactions(publicKey: string | undefined | null, coin: string) {
+  getTokensBalance(publicKey: string | undefined | null) {
+    
+    if (!publicKey) return of(null);
+
+    const url = new URL('https://api.shyft.to/sol/v1/wallet/all_tokens');
+
+    url.searchParams.set('network', 'mainnet-beta');
+    url.searchParams.set('wallet', publicKey);
+
+    return this._httpClient.get<TokensBalance>(url.toString(), { headers: this._header })
+      .pipe(map((response) => response.result));
+  
+  };
+
+  /*  */
+  getPortfolio(publicKey: string | undefined | null) {
+    
+    if (!publicKey) return of(null);
+
+    const url = new URL('https://api.shyft.to/sol/v1/wallet/get_portfolio');
+
+    url.searchParams.set('network', 'mainnet-beta');
+    url.searchParams.set('wallet', publicKey);
+
+    const portfolio = this._httpClient.get<Portfolio>(url.toString(), { headers: this._header })
+      .pipe(map((response) => response.result));
+  
+      // get token info
+      // portfolio.subscribe((data) => {
+
+      //   let tokens = [];
+
+      //   for (let index = 0; index < data.num_tokensh; index++) {
+      //     tokens.push(this.getTokenBalance(publicKey, data.tokens[index].address));
+      //   };
+
+      //   data.tokens = tokens
+      // });
+
+    return portfolio;
+  };
+
+  /*  */
+  getTransactions(publicKey: string | undefined | null) {
 
     if (!publicKey) return of([]);
 

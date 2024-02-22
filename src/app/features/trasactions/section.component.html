@@ -11,13 +11,13 @@
     @if (!txs()) {
     
       <p class="text-center">
-        Conecta tu wallet para ver las transacciones.
+        Billetera no conectada
       </p>
     
     } @else if (txs()?.length === 0) {
       
       <p class="text-center">
-        No hay transacciones disponibles.
+        Sin transacciones
       </p>
     
     } @else {

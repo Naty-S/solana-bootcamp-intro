@@ -44,9 +44,9 @@ export class TransactionsSectionComponent {
   @ViewChild(MatSort) sort!: MatSort;
 
 
-  readonly txs = computedAsync(
-    () => {
-      const tx = this._shyftApiService.getTransactions(this._publicKey()?.toBase58(), "");
+  readonly txs = computedAsync(() => {
+      
+      const tx = this._shyftApiService.getTransactions(this._publicKey()?.toBase58());
 
       tx.subscribe((data) => {
         this.transactions = new MatTableDataSource(data);

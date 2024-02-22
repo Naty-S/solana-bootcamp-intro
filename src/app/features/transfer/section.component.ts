@@ -15,8 +15,12 @@ import { TransferModalComponent } from './modal.component';
   imports: [MatButtonModule],
   template: `
     <section class="flex justify-center items-center gap-2">
+
+    <!-- if (saldo insuficiente) 
+      else (button) Advertencia que no tiene SOL para el fee?  -->
+
       <button type="button" (click)="onTransfer()" mat-raised-button color="primary">
-        transferir
+        transferir SILLY
       </button>
     </section>
   `
