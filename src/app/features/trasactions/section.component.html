@@ -8,19 +8,19 @@
   
   <mat-card class="w-75 px-4 py-8">
   
-    @if (!txs()) {
+    <!-- @if (!txs()) {
     
       <p class="text-center">
         Billetera no conectada
-      </p>
+      </p> -->
     
-    } @else if (txs()?.length === 0) {
+    <!-- } @else if (txs()?.length === 0) {
       
       <p class="text-center">
         Sin transacciones
-      </p>
+      </p> -->
     
-    } @else {
+    <!-- } @else { -->
   
       <mat-form-field>
         <mat-label>Filter</mat-label>
@@ -99,6 +99,6 @@
           aria-label="Transactions"
         />
       </div>
-    }
+    <!-- } -->
   </mat-card>
 </section>
