@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 
 import { MatCard } from '@angular/material/card';
@@ -11,6 +11,7 @@ import { injectPublicKey } from '@heavy-duty/wallet-adapter';
 import { computedAsync } from 'ngxtension/computed-async';
 
 import { ShyftApiService } from '../core/services/shyft-api.service';
+import { Balance } from '../core/models/transactions.model';
 
 
 @Component({
@@ -35,7 +36,7 @@ import { ShyftApiService } from '../core/services/shyft-api.service';
               </p>
             </mat-list-item>
 
-            @for (token of tokens(); track $index) {
+            @for (token of tokens; track $index) {
               <mat-list-item>
                 <img matListItemIcon [src]="token.info.image" class="w-16 h-16" />
                 <p matListItemLine>{{ token.info.symbol }}</p>
@@ -57,16 +58,14 @@ export class BalanceSectionComponent {
   private readonly _shyftApiService = inject(ShyftApiService);
   private readonly _publicKey = injectPublicKey();
   
+  @Input() tokens!: Balance[];
+
   readonly sol = computedAsync(() =>
     this._shyftApiService.getSOLBalance(this._publicKey()?.toBase58())
   );
 
   readonly portfolio = computedAsync(() =>
     this._shyftApiService.getPortfolio(this._publicKey()?.toBase58())
-  );
-
-  readonly tokens = computedAsync(() =>
-    this._shyftApiService.getTokensBalance(this._publicKey()?.toBase58())
   );
 
   // readonly token = computedAsync(() =>
