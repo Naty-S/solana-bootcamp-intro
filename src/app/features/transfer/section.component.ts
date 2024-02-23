@@ -20,6 +20,7 @@ import { Balance } from '../../core/models/transactions.model';
         mat-raised-button
         color="primary"
         type="button"
+        [disabled]="tokens.length == 0"
         (click)="onTransfer()"
       >
         transferir
