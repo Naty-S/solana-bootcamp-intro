@@ -6,19 +6,24 @@ import { MatInput } from '@angular/material/input';
 import { MatIcon } from '@angular/material/icon';
 import { MatButton } from '@angular/material/button';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSelectModule, MatOption } from '@angular/material/select';
+
+import { Balance } from '../../core/models/transactions.model';
 import { TransferMessageComponent } from './message.component';
 
 
 export interface TransferFormModel {
-  memo: string | null,
-  amount: number | null,
-  receiverAddress: string | null
+  memo: string | null;
+  amount: number | null;
+  receiverAddress: string | null;
+  token: Balance | null
 };
 
 export interface TransferFormPayload {
-  memo: string,
-  amount: number,
-  receiverAddress: string
+  memo: string;
+  amount: number;
+  receiverAddress: string;
+  mintAddress: string
 };
 
 @Component({
@@ -30,6 +35,8 @@ export interface TransferFormPayload {
     , MatInput
     , MatIcon
     , MatButton
+    , MatSelectModule
+    , MatOption
   ],
   templateUrl: "./form.component.html"
 })
@@ -39,27 +46,27 @@ export class TransferFormComponent {
   readonly model: TransferFormModel = {
     memo: null,
     amount: null,
-    receiverAddress: null
+    receiverAddress: null,
+    token: null
   };
 
   private readonly _matSnackBar = inject(MatSnackBar);
 
   readonly locked = input<boolean>(false);
   @Input() status = "";
+  @Input() tokens: Balance[] = [];
   
   @Output() readonly submitForm = new EventEmitter<TransferFormPayload>();
   @Output() readonly cancelTransfer = new EventEmitter();
   
-  invalidForm = false;
-
   onSubmit(form: NgForm) {
 
     if (form.invalid ||
         this.model.amount == null ||
         this.model.memo == null ||
-        this.model.receiverAddress == null
+        this.model.receiverAddress == null || 
+        this.model.token == null
     ) {
-      this.invalidForm = true;
       this._matSnackBar.openFromComponent(TransferMessageComponent, {
         duration: 4000,
         horizontalPosition: 'end',
@@ -75,7 +82,8 @@ export class TransferFormComponent {
       this.submitForm.emit({
         memo: this.model.memo,
         amount: this.model.amount,
-        receiverAddress: this.model.receiverAddress
+        receiverAddress: this.model.receiverAddress,
+        mintAddress: this.model.token.address
       });
     };
   };

@@ -1,4 +1,4 @@
-interface Balance {
+export interface Balance {
   address: string;
   balance: number;
   associated_account: string;

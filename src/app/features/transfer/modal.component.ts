@@ -1,11 +1,12 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, Inject, computed, inject } from '@angular/core';
 
 import { injectTransactionSender } from '@heavy-duty/wallet-adapter';
 import { createTransferInstructions } from "@heavy-duty/spl-utils";
 
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
+import { Balance } from '../../core/models/transactions.model';
 import { TransferFormComponent, TransferFormPayload } from './form.component';
 import { TransferMessageComponent } from './message.component';
 
@@ -21,6 +22,7 @@ import { TransferMessageComponent } from './message.component';
       <solana-bootcamp-intro-transfer-form
         [locked]="isProcessing()"
         [status]="transactionStatus()"
+        [tokens]="data"
         (submitForm)="onTransfer($event)"
         (cancelTransfer)="onCancelTransfer()"
       />
@@ -36,13 +38,15 @@ export class TransferModalComponent {
 
   readonly transactionStatus = computed(() => this._transactionSender().status);
   readonly isProcessing = computed(() =>
+    // this.transactionStatus() === 'pending' ||
     this.transactionStatus() === 'sending' ||
     this.transactionStatus() === 'confirming' ||
-    this.transactionStatus() === 'finalizing',
+    this.transactionStatus() === 'finalizing' ||
+    this.transactionStatus() === 'finalized' ||
+    this.transactionStatus() === 'failed',
   );
 
-  txErr = false;
-  txOk = false;
+  constructor(@Inject(MAT_DIALOG_DATA) public data: Balance[]) {}
 
   onTransfer(payload: TransferFormPayload) {
 
@@ -52,7 +56,7 @@ export class TransferModalComponent {
       // Tener los valores en un archivo config
       createTransferInstructions({
         amount: payload.amount,
-        mintAddress: "7EYnhQoR9YM3N7UoaKRoA44Uy8JeaZV3qyouov87awMs", // SILLY
+        mintAddress: payload.mintAddress,
         receiverAddress: payload.receiverAddress,
         senderAddress: publicKey.toBase58(),
         fundReceiver: true, // Intenta crear la associated token account (ATA)

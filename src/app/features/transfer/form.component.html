@@ -27,16 +27,41 @@
       }
     </mat-form-field>
   
-    <mat-form-field appearance="fill" class="w-full mb-4">
+    <mat-form-field appearance="fill" class="w-25 mb-4">
+      <mat-label>Moneda</mat-label>
+      <mat-select
+        placeholder="Placeholder"
+        [(ngModel)]="model.token"
+        name="token"
+        #tokenControl="ngModel"
+        required
+      >
+        <mat-option *ngFor="let token of tokens" [value]="token.balance">
+          <img [src]="token.info.image" class="rounded-full w-8 h-8" />
+          <span>{{ token.info.symbol }} - {{ token.balance }}</span>
+        </mat-option>
+      </mat-select>
+
+      @if (form.submitted && tokenControl.errors) {
+        <mat-error>
+          @if (tokenControl.errors["required"]) { La moneda es obligatoria. }
+        </mat-error>
+      } @else {
+        <mat-hint>Token</mat-hint>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" class="w-75 mb-4">
       <mat-label>Monto</mat-label>
       <input
-        name="amount"
         matInput
+        placeholder="Monto a pagar"
+        name="amount"
         type="number"
         min="0"
-        placeholder="Monto a pagar"
-        #amountControl="ngModel"
+        [max]="tokenControl.value?.balance ?? undefined"
         [(ngModel)]="model.amount"
+        #amountControl="ngModel"
         required
       />
       <mat-icon matSuffix>attach_money</mat-icon>
@@ -45,6 +70,7 @@
         <mat-error>
           @if (amountControl.errors["required"]) { El monto es obligatorio. }
           @else if (amountControl.errors["min"]) { El monto debe ser mayor a cero. }
+          @else if (amountControl.errors["max"]) { Saldo insuficiente: {{ tokenControl.value.balance }}. }
         </mat-error>
       } @else {
         <mat-hint>Monto de la transferencia</mat-hint>
