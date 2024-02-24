@@ -23,7 +23,8 @@ export interface TransferFormPayload {
   memo: string;
   amount: number;
   receiverAddress: string;
-  mintAddress: string
+  mintAddress: string;
+  decimals: number
 };
 
 @Component({
@@ -82,7 +83,8 @@ export class TransferFormComponent {
         memo: this.model.memo,
         amount: this.model.amount,
         receiverAddress: this.model.receiverAddress,
-        mintAddress: this.model.token.address
+        mintAddress: this.model.token.address,
+        decimals: this.model.token.info.decimals
       });
     };
   };

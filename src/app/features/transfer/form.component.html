@@ -16,7 +16,7 @@
         required
       >
         @for (token of tokens(); track token) {
-          <mat-option [value]="token.balance">
+          <mat-option [value]="token">
             <img [src]="token.info.image" class="rounded-full w-8 h-8" />
             <span>
               {{ token.info.symbol }} - {{ token.balance }}
@@ -42,7 +42,7 @@
         name="amount"
         type="number"
         min="0"
-        [max]="tokenControl.value ?? undefined"
+        [max]="tokenControl.value?.balance"
         [(ngModel)]="model.amount"
         #amountControl="ngModel"
         required
@@ -53,7 +53,7 @@
         <mat-error>
           @if (amountControl.errors["required"]) { El monto es obligatorio. }
           @else if (amountControl.errors["min"]) { El monto debe ser mayor a cero. }
-          @else if (amountControl.errors["max"]) { Saldo insuficiente: {{ tokenControl.value }}. }
+          @else if (amountControl.errors["max"]) { Saldo insuficiente: {{ tokenControl.value.balance }}. }
         </mat-error>
       } @else {
         <mat-hint>Monto de la transferencia</mat-hint>

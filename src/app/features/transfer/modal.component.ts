@@ -55,7 +55,7 @@ export class TransferModalComponent {
     this._transactionSender.send( ({ publicKey }) =>
       // Tener los valores en un archivo config
       createTransferInstructions({
-        amount: payload.amount,
+        amount: payload.amount * 10 ** payload.decimals,
         mintAddress: payload.mintAddress,
         receiverAddress: payload.receiverAddress,
         senderAddress: publicKey.toBase58(),
