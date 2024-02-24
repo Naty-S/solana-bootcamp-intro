@@ -1,7 +1,7 @@
 <!-- poder seleccionar cual token transferir (dropdown) -->
 @if (locked()) {
   <span class="loading loading-ring loading-lg"></span>
-  <p>{{ status }}...</p>
+  <p>{{ status() }}...</p>
 } @else {
 
   <form #form="ngForm" class="w-[400px]" (ngSubmit)="onSubmit(form)">
@@ -27,7 +27,7 @@
       }
     </mat-form-field>
   
-    <mat-form-field appearance="fill" class="w-25 mb-4">
+    <mat-form-field appearance="fill" class="w-full mb-4">
       <mat-label>Moneda</mat-label>
       <mat-select
         placeholder="Placeholder"
@@ -36,10 +36,14 @@
         #tokenControl="ngModel"
         required
       >
-        <mat-option *ngFor="let token of tokens" [value]="token.balance">
-          <img [src]="token.info.image" class="rounded-full w-8 h-8" />
-          <span>{{ token.info.symbol }} - {{ token.balance }}</span>
-        </mat-option>
+        @for (token of tokens(); track token) {
+          <mat-option [value]="token.balance">
+            <img [src]="token.info.image" class="rounded-full w-8 h-8" />
+            <span>
+              {{ token.info.symbol }} - {{ token.balance }}
+            </span>
+          </mat-option>
+        }      
       </mat-select>
 
       @if (form.submitted && tokenControl.errors) {
@@ -51,7 +55,7 @@
       }
     </mat-form-field>
 
-    <mat-form-field appearance="fill" class="w-75 mb-4">
+    <mat-form-field appearance="fill" class="w-full mb-4">
       <mat-label>Monto</mat-label>
       <input
         matInput
@@ -59,7 +63,7 @@
         name="amount"
         type="number"
         min="0"
-        [max]="tokenControl.value?.balance ?? undefined"
+        [max]="tokenControl.value ?? undefined"
         [(ngModel)]="model.amount"
         #amountControl="ngModel"
         required
@@ -70,7 +74,7 @@
         <mat-error>
           @if (amountControl.errors["required"]) { El monto es obligatorio. }
           @else if (amountControl.errors["min"]) { El monto debe ser mayor a cero. }
-          @else if (amountControl.errors["max"]) { Saldo insuficiente: {{ tokenControl.value.balance }}. }
+          @else if (amountControl.errors["max"]) { Saldo insuficiente: {{ tokenControl.value }}. }
         </mat-error>
       } @else {
         <mat-hint>Monto de la transferencia</mat-hint>

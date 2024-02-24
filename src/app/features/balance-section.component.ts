@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 
 import { MatCard } from '@angular/material/card';
@@ -36,7 +36,7 @@ import { Balance } from '../core/models/transactions.model';
               </p>
             </mat-list-item>
 
-            @for (token of tokens; track $index) {
+            @for (token of tokens(); track $index) {
               <mat-list-item>
                 <img matListItemIcon [src]="token.info.image" class="w-16 h-16" />
                 <p matListItemLine>{{ token.info.symbol }}</p>
@@ -58,7 +58,7 @@ export class BalanceSectionComponent {
   private readonly _shyftApiService = inject(ShyftApiService);
   private readonly _publicKey = injectPublicKey();
   
-  @Input() tokens!: Balance[];
+  readonly tokens = input<Balance[]>([]);
 
   readonly sol = computedAsync(() =>
     this._shyftApiService.getSOLBalance(this._publicKey()?.toBase58())

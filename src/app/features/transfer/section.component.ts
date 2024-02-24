@@ -1,7 +1,4 @@
-/* 
-boton transferir
-*/
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, input } from '@angular/core';
 
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -20,7 +17,7 @@ import { Balance } from '../../core/models/transactions.model';
         mat-raised-button
         color="primary"
         type="button"
-        [disabled]="tokens.length == 0"
+        [disabled]="tokens().length == 0"
         (click)="onTransfer()"
       >
         transferir
@@ -33,7 +30,7 @@ export class TransferSectionComponent implements OnInit {
   
   private readonly _matDialog = inject(MatDialog);
 
-  @Input() tokens!: Balance[];
+  readonly tokens = input<Balance[]>([]);
 
   constructor() { }
 
@@ -41,7 +38,7 @@ export class TransferSectionComponent implements OnInit {
 
   onTransfer() {
     this._matDialog.open(TransferModalComponent, {
-      data: this.tokens
+      data: this.tokens()
     })
   };
 }
