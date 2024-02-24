@@ -73,7 +73,7 @@ export class TransferModalComponent {
             msg: `🎉 Exito al enviar. Ver explorador: https://explorer.solana.com/tx/${signature}`,
             success: true
           }
-        })
+        });
         
         this._matDialogRef.close();
       },
@@ -84,10 +84,12 @@ export class TransferModalComponent {
           verticalPosition: 'top',
           // announcementMessage: "mensaje de anuncio",// panelClass: ['toast'],
           data: {
-            msg: error.toString() + ".\n 🚨 Error enviando",
+            msg: `🚨 Error enviando: ${error.toString()}`,
             success: false
           }
-        })
+        });
+
+        this._matDialogRef.close();
       },
       complete: () => { this._matDialogRef.disableClose = false; }
     });
