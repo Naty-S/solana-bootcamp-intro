@@ -23,14 +23,17 @@ import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
         </svg>
       }
 
-      <span>{{ data.msg }}.</span>
+      <span>
+        {{ data.msg }}.
+        @if (data.link) {<a href="{{ data.link }}">link.</a>}
+      </span>
     </div>
   `,
 })
 export class TransferMessageComponent {
 
   constructor(
-    @Inject(MAT_SNACK_BAR_DATA) public data: { msg: string, success: boolean }
+    @Inject(MAT_SNACK_BAR_DATA) public data: { msg: string, link?: string, success: boolean }
   ) {
   };
 };

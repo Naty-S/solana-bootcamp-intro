@@ -65,12 +65,13 @@ export class TransferModalComponent {
     ).subscribe({
       next: (signature) => {
         this._matSnackBar.openFromComponent(TransferMessageComponent, {
-          duration: 4000,
+          duration: 10000,
           horizontalPosition: 'end',
           verticalPosition: 'top',
           // announcementMessage: "mensaje de anuncio",
           data: {
-            msg: `🎉 Exito al enviar. Ver explorador: https://explorer.solana.com/tx/${signature}`,
+            msg: "🎉 Exito al enviar. Ver explorador:",
+            link: `https://explorer.solana.com/tx/${signature}`,
             success: true
           }
         });
